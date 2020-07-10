@@ -14,11 +14,7 @@ const UserSchema = new Schema(
             type: String,
             required: true,
             unique: true,
-            validate: {
-                validator: function(v) {
-                    return /^([a-z0-9_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,8})$/.test
-                }
-            }
+            match: [/^([a-z0-9_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,8})$/]
         },
         thought: {
             type: Schema.Types.ObjectId,
