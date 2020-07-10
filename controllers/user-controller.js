@@ -35,6 +35,25 @@ const usercontroller = {
             })
     },
 
+    addFriend({ params, body }, res) {
+        User.findOneAndUpdate(
+            { _id: params.id},
+            {$push: {friends: body}},
+            {new: true}
+            )
+            .then(dbThoughtData => {
+                if (!dbThoughtData) {
+                    res.status(404).json({ message: 'No thought found with this id'})
+                    return
+                }
+                res.json(dbThoughtData)
+            })
+            .catch(err => {
+                console.log(err);
+                res.status(500).json(err);
+            })
+    },
+
     updateUser({ params, body }, res) {
         User.findOneAndUpdate({_id: params.id}, body, {new: true})
             .then(dbUserData => {
@@ -48,10 +67,9 @@ const usercontroller = {
                 console.log(err)
                 res.status(500).json(err)
             })
-
     },
 
-    deleteUser({ params }, res){
+    deleteUser({ params }, res) {
         User.findOneAndDelete({ _id: params.id })
             .then(dbUserData => {
                 if (!dbUserData) {
@@ -64,7 +82,25 @@ const usercontroller = {
                 console.log(err);
                 res.status(500).json(err);
             })
-
+    },
+    
+    removeFriend({params, body}, res) {
+        User.findOneAndUpdate(
+            {_id: params.id},
+            {$pull: {friends: body} },
+            { new: true })
+            .then(dbThoughtData => {
+                if (!dbThoughtData) {
+                    res.status(404).json({ message: 'No thought found with this id'})
+                    return
+                }
+                res.json(dbThoughtData)
+            })
+            .catch(err => {
+                console.log(err);
+                res.status(500).json(err);
+            })
     }
 }
+
 module.exports = usercontroller;
