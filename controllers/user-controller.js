@@ -3,7 +3,7 @@ const {User} = require('../models');
 const usercontroller = {
 
     getAllUsers(req, res) {
-        User.find({})
+        User.find()
             .then(dbUserData => res.json(dbUserData))
             .catch(err => {
                 console.log(err);
@@ -12,7 +12,8 @@ const usercontroller = {
     },
 
     getUserId({ params }, res) {
-        User.findById({ _id: params.id})
+        User.findById({ _id: params.userid})
+            .populate('friends')
             .then(dbUserData => {
                 if (!dbUserData) {
                     res.status(404).json({ message: 'No user with this id'})
@@ -35,15 +36,15 @@ const usercontroller = {
             })
     },
 
-    addFriend({ params, body }, res) {
+    addFriend({ params }, res) {
         User.findOneAndUpdate(
-            { _id: params.id},
-            {$push: {friends: body}},
+            { _id: params.userid},
+            {$push: {friends: params.friendsid}},
             {new: true}
             )
             .then(dbThoughtData => {
                 if (!dbThoughtData) {
-                    res.status(404).json({ message: 'No thought found with this id'})
+                    res.status(404).json({ message: 'No one found with this id'})
                     return
                 }
                 res.json(dbThoughtData)
@@ -55,7 +56,10 @@ const usercontroller = {
     },
 
     updateUser({ params, body }, res) {
-        User.findOneAndUpdate({_id: params.id}, body, {new: true})
+        User.findOneAndUpdate(
+            {_id: params.userid}, 
+            body,
+            {new: true})
             .then(dbUserData => {
                 if (!dbUserData) {
                     res.status(404).json({ message: 'No uses found under this id.'})
@@ -70,7 +74,7 @@ const usercontroller = {
     },
 
     deleteUser({ params }, res) {
-        User.findOneAndDelete({ _id: params.id })
+        User.findOneAndDelete({ _id: params.userid })
             .then(dbUserData => {
                 if (!dbUserData) {
                     res.status(404).json({ message: 'no user found under this id'})
@@ -86,8 +90,8 @@ const usercontroller = {
     
     removeFriend({params, body}, res) {
         User.findOneAndUpdate(
-            {_id: params.id},
-            {$pull: {friends: body} },
+            {_id: params.userid},
+            {$pull: {friends: params.friendid} },
             { new: true })
             .then(dbThoughtData => {
                 if (!dbThoughtData) {

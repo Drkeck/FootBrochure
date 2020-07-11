@@ -5,8 +5,6 @@ const ReactionSchema = new Schema(
     {
         reactionId: {
             type: Types.ObjectId,
-            default: new ObjectId
-
         },
         reactionBody: {
             type: String,
