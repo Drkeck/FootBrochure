@@ -4,6 +4,8 @@ const usercontroller = {
 
     getAllUsers(req, res) {
         User.find()
+            .populate('thought')
+            .populate('friends')
             .then(dbUserData => res.json(dbUserData))
             .catch(err => {
                 console.log(err);
@@ -13,6 +15,7 @@ const usercontroller = {
 
     getUserId({ params }, res) {
         User.findById({ _id: params.userid})
+            .populate('thought')
             .populate('friends')
             .then(dbUserData => {
                 if (!dbUserData) {
@@ -39,7 +42,7 @@ const usercontroller = {
     addFriend({ params }, res) {
         User.findOneAndUpdate(
             { _id: params.userid},
-            {$push: {friends: params.friendsid}},
+            {$push: {friends: params.friendid}},
             {new: true}
             )
             .then(dbThoughtData => {

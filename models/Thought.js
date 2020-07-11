@@ -3,9 +3,6 @@ const moment = require('moment');
 
 const ReactionSchema = new Schema(
     {
-        reactionId: {
-            type: Types.ObjectId,
-        },
         reactionBody: {
             type: String,
             required: true,
@@ -24,7 +21,9 @@ const ReactionSchema = new Schema(
     {
         toJSON: {
             getters: true
-        }
+        },
+        id: true
+        
     }
 )
 
@@ -52,12 +51,12 @@ const ThoughtSchema = new Schema(
             virtuals: true,
             getters: true
         },
-
+        id: false
     }
 )
 
 ThoughtSchema.virtual('reactionCount').get(function() {
-    return this.reactions.reduce((total, reactions) => total + reactions.length + 1, 0)
+    return this.reactions.length;
 })
 
 const Thought = model('Thought', ThoughtSchema);

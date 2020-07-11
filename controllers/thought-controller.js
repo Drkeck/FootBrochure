@@ -1,11 +1,15 @@
 const {Thought} = require('../models');
 const { findOneAndUpdate } = require('../models/User');
+const User = require('../models/User');
 
 const thoughtController = {
 
     getAllThoughts(req, res) {
         Thought.find({})
-            .populate('reactions')
+            .populate({
+                path:'reactions',
+                select:'reactionBody'
+            })
             .then(dbThoughtData => res.json(dbThoughtData))
             .catch(err => {
                 console.log(err);
@@ -15,7 +19,10 @@ const thoughtController = {
 
     getThoughtbyId({ params }, res) {
         Thought.findOne({ _id: params.id})
-            .populate('reactions')
+            .populate({
+                path:'reactions',
+                select:'reactionBody'
+            })
             .then(dbThoughtData => {
                 if (!dbThoughtData) {
                     res.status(404).json({ message: 'No thought found with this id'})
@@ -31,6 +38,13 @@ const thoughtController = {
 
     createThought({ body }, res) {
         Thought.create(body)
+            .then(({_id}) => {
+                return User.findOneAndUpdate( 
+                    {username: body.username},
+                    {$push: {thought: _id}},
+                    {new: true}
+                    )
+            })
             .then(dbThoughtData => res.json(dbThoughtData))
             .catch(err => {
                 console.log(err)
@@ -39,7 +53,10 @@ const thoughtController = {
     },
 
     addReaction({params, body}, res) {
-        Thought.findOneAndUpdate({ _id: params.id}, {$push: { reactions: body}}, {new: true})
+        Thought.findOneAndUpdate(
+            { _id: params.id},
+            {$push: { reactions: body}},
+            {new: true})
             .then(dbThoughtData => {
                 if (!dbThoughtData) {
                     res.status(404).json({ message: 'No thought under this id to react to!'})
