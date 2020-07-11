@@ -1,9 +1,11 @@
 const {Thought} = require('../models');
+const { findOneAndUpdate } = require('../models/User');
 
 const thoughtController = {
 
     getAllThoughts(req, res) {
         Thought.find({})
+            .populate('reactions')
             .then(dbThoughtData => res.json(dbThoughtData))
             .catch(err => {
                 console.log(err);
@@ -13,6 +15,7 @@ const thoughtController = {
 
     getThoughtbyId({ params }, res) {
         Thought.findOne({ _id: params.id})
+            .populate('reactions')
             .then(dbThoughtData => {
                 if (!dbThoughtData) {
                     res.status(404).json({ message: 'No thought found with this id'})
@@ -32,6 +35,21 @@ const thoughtController = {
             .catch(err => {
                 console.log(err)
                 res.status(500).json(err)
+            })
+    },
+
+    addReaction({params, body}, res) {
+        Thought.findOneAndUpdate({ _id: params.id}, {$push: { reactions: body}}, {new: true})
+            .then(dbThoughtData => {
+                if (!dbThoughtData) {
+                    res.status(404).json({ message: 'No thought under this id to react to!'})
+                    return;
+                }
+                res.json(dbThoughtData)
+            })
+            .catch(err => {
+                console.log(err);
+                res.status(500).json(err);
             })
     },
 
@@ -58,6 +76,21 @@ const thoughtController = {
                     return
                 }
                 res.json(dbThoughtData)
+            })
+            .catch(err => {
+                console.log(err);
+                res.status(500).json(err);
+            })
+    },
+
+    removeReaction({ params }, res) {
+        findOneAndUpdate({ _id: params.id}, {$pull: { reactions: params.reactionid} }, { new: true } )
+            .then(dbThoughtData => {
+                if (!dbThoughtData) {
+                    res.status(404).json({ message: 'No post to react to' });
+                    return;
+                }
+                res.json(dbThoughtData);
             })
             .catch(err => {
                 console.log(err);
