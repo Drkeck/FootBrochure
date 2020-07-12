@@ -101,7 +101,7 @@ const thoughtController = {
     },
 
     removeReaction({ params }, res) {
-        findOneAndUpdate({ _id: params.id}, {$pull: { reactions: params.reactionid} }, { new: true } )
+        Thought.findOneAndUpdate({ _id: params.id}, {$pull: { reactions: { reactionId: params.reactionid} } }, { new: true } )
             .then(dbThoughtData => {
                 if (!dbThoughtData) {
                     res.status(404).json({ message: 'No post to react to' });
