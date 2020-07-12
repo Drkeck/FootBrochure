@@ -3,13 +3,13 @@
 ![image of api](https://i.imgur.com/3CLCJdE.gif)
 
 
-This is the api for a new social media platform FootBrochure (yes, i seriously named it that, gotta have a sense of humor while learning).
+This is the api for a new social media platform FootBrochure (yes, I seriously named it that, gotta have a sense of humor while learning).
 
 this api allows for typical users, but those users are able to add friends, share thoughts(Posts) and React to posts.
 
 this is still in the fledgling stages of new social media but the sole foundation has already been set.
 
-i guess you can see we got off on the right foot.
+I guess you can see we got off on the right foot.
 
 [Click here for a video!](https://youtu.be/9c6advkQfPw)
 
@@ -44,4 +44,4 @@ i guess you can see we got off on the right foot.
 * [node.js](https://nodejs.org/en/)
 
 ## Author (Kept his pace)
-Hi im [Drkeck](https://github.com/Drkeck) also know as alex! feel free to hit me up on Github or email me at k3ckl3y.a@gmail.com
+Hi Im [Drkeck](https://github.com/Drkeck) also know as alex! feel free to hit me up on Github or email me at k3ckl3y.a@gmail.com
